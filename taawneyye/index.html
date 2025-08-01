@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alhusainy Supermarket</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://unpkg.com/@zxing/library@latest"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><i class="fas fa-shopping-cart"></i> Alhusainy</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#products" class="nav-link">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#sales" class="nav-link">Sales</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#reviews" class="nav-link">Reviews</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link admin-link" onclick="openAdminModal()">Admin</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to Alhusainy Supermarket</h1>
+                <p class="hero-description">
+                    Your one-stop destination for fresh groceries, quality products, and amazing deals.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToSection('products')">Shop Now</button>
+                    <button class="btn btn-secondary" onclick="scrollToSection('sales')">View Sales</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-placeholder">
+                    <i class="fas fa-store"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="products">
+        <div class="container">
+            <h2 class="section-title">Our Products</h2>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search by product name or barcode...">
+                    <button class="search-btn" onclick="searchProducts()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="clear-btn" onclick="clearSearch()" style="display: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <button class="scan-btn" onclick="openBarcodeScanner()">
+                    <i class="fas fa-camera"></i> Scan Barcode
+                </button>
+            </div>
+
+            <!-- Barcode Scanner Modal -->
+            <div id="scannerModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeBarcodeScanner()">&times;</span>
+                    <h3>Scan Barcode</h3>
+                    <div id="scanner-container">
+                        <video id="scanner-video" autoplay></video>
+                    </div>
+                    <p>Point your camera at a barcode to scan</p>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="productsGrid" class="products-grid">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sales Section -->
+    <section id="sales" class="sales">
+        <div class="container">
+            <h2 class="section-title">Special Sales</h2>
+            <div id="salesGrid" class="sales-grid">
+                <!-- Sales items will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="reviews">
+        <div class="container">
+            <h2 class="section-title">Customer Reviews</h2>
+            <div class="reviews-content">
+                <div class="reviews-display">
+                    <h3>What Our Customers Say</h3>
+                    <div id="reviewsList" class="reviews-list">
+                        <!-- Reviews will be displayed here -->
+                    </div>
+                </div>
+                <div class="review-form-container">
+                    <h3>Leave a Review</h3>
+                    <form id="reviewForm" class="review-form">
+                        <div class="form-group">
+                            <input type="text" id="reviewName" name="name" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <select id="reviewRating" name="rating" required>
+                                <option value="">Select Rating</option>
+                                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                                <option value="4">⭐⭐⭐⭐ Very Good</option>
+                                <option value="3">⭐⭐⭐ Good</option>
+                                <option value="2">⭐⭐ Fair</option>
+                                <option value="1">⭐ Poor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="reviewMessage" name="message" placeholder="Your review about our service and prices..." rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Login Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content admin-modal">
+            <span class="close" onclick="closeAdminModal()">&times;</span>
+            <div class="admin-login">
+                <h2><i class="fas fa-user-shield"></i> Admin Login</h2>
+                <form id="adminLoginForm" class="admin-form">
+                    <div class="form-group">
+                        <input type="text" id="adminUsername" name="username" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="adminPassword" name="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Modal -->
+    <div id="adminDashboard" class="modal">
+        <div class="modal-content dashboard-modal">
+            <span class="close" onclick="closeAdminDashboard()">&times;</span>
+            <div class="admin-dashboard">
+                <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+                <div class="dashboard-tabs">
+                    <button class="tab-btn active" onclick="showTab('addProduct')">Add Product</button>
+                    <button class="tab-btn" onclick="showTab('manageProducts')">Manage Products</button>
+                    <button class="tab-btn" onclick="showTab('manageSales')">Manage Sales</button>
+                    <button class="tab-btn" onclick="showTab('viewReviews')">View Reviews</button>
+                </div>
+                
+                <!-- Add Product Tab -->
+                <div id="addProduct" class="tab-content active">
+                    <h3>Add New Product</h3>
+                    <form id="addProductForm" class="admin-form">
+                        <div class="form-group">
+                            <label>Product Name</label>
+                            <input type="text" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Barcode</label>
+                            <input type="text" name="barcode" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Price (USD)</label>
+                            <input type="number" name="price" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Weight</label>
+                            <input type="text" name="weight" placeholder="e.g., 500g, 1kg" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category" required>
+                                <option value="">Select Category</option>
+                                <option value="fruits">Fruits & Vegetables</option>
+                                <option value="dairy">Dairy & Eggs</option>
+                                <option value="meat">Meat & Fish</option>
+                                <option value="bakery">Bakery</option>
+                                <option value="beverages">Beverages</option>
+                                <option value="snacks">Snacks</option>
+                                <option value="household">Household</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Product Image</label>
+                            <input type="file" name="image" accept="image/*" required>
+                            <small style="color: #6b7280; font-size: 0.8rem;">Upload an image file (JPG, PNG, GIF, etc.)</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="description" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Product</button>
+                    </form>
+                </div>
+
+                <!-- Manage Products Tab -->
+                <div id="manageProducts" class="tab-content">
+                    <h3>Manage Products</h3>
+                    <p>View, edit, and delete products from your inventory. Click "Edit Name" or "Edit Price" to modify product details.</p>
+                    <div id="adminProductsList" class="admin-products-list">
+                        <!-- Products will be displayed here with edit and delete buttons -->
+                    </div>
+                </div>
+
+                <!-- Manage Sales Tab -->
+                <div id="manageSales" class="tab-content">
+                    <h3>Manage Sales & Discounts</h3>
+                    <form id="addSaleForm" class="admin-form">
+                        <div class="form-group">
+                            <label>Select Product</label>
+                            <select id="saleProductSelect" name="productId" required>
+                                <option value="">Choose a product</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Discount Percentage</label>
+                            <input type="number" name="discount" min="1" max="90" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Sale End Date</label>
+                            <input type="date" name="endDate" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Sale</button>
+                    </form>
+                    <div id="activeSales" class="active-sales">
+                        <h4>Active Sales</h4>
+                        <div id="salesList"></div>
+                    </div>
+                </div>
+
+                <!-- View Reviews Tab -->
+                <div id="viewReviews" class="tab-content">
+                    <h3>Customer Reviews</h3>
+                    <div id="adminReviewsList" class="admin-reviews-list">
+                        <!-- Reviews will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-shopping-cart"></i> Alhusainy</h3>
+                    <p>Your trusted supermarket for quality products and excellent service.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#sales">Sales</a></li>
+                        <li><a href="#reviews">Reviews</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-phone"></i> +961 71 050 130</p>
+                    <p><i class="fas fa-envelope"></i> alhusainy@info.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Abbasieh, Tyre, Lebanon</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Alhusainy Supermarket. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 
